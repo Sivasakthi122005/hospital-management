@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body { align-items: flex-start; }
+    .page-wrapper { align-items: flex-start; padding: 40px 16px; }
+    .slider-container { width: 100%; overflow: hidden; position: relative; margin-top: 12px; }
+    .slider { display: flex; transition: transform 0.5s cubic-bezier(0.4,0,0.2,1); }
+    .slide  { min-width: 100%; box-sizing: border-box; }
+    pre { white-space: pre-wrap; word-wrap: break-word; }
+    .admin-actions { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px; }
+  </style>
+</head>
+<body class="admin-page">
+
+  <div class="page-transition" id="pt"></div>
+
+  <div class="page-wrapper">
+    <div class="container">
+      <h2>⚕️ Admin Dashboard</h2>
+
+      <div class="admin-actions">
+        <button onclick="showSection('addDoctor')">👨‍⚕️ Add Doctor</button>
+        <button onclick="showSection('addPatient')">🧑‍🤝‍🧑 Add Patient</button>
+        <button onclick="showSection('addMedicine')">💊 Add Medicine</button>
+        <button onclick="showRecords()">📋 View Records</button>
+        <a href="login.html" onclick="navTo(event,'login.html')"><button>🚪 Logout</button></a>
+      </div>
+
+      <div id="adminSections">
+        <!-- Add Doctor -->
+        <div class="section" id="addDoctor" style="display:none;">
+          <h3>👨‍⚕️ Add Doctor</h3>
+          <input type="text"   id="docName"  placeholder="Doctor Name">
+          <input type="text"   id="docSpec"  placeholder="Specialization (optional)">
+          <input type="number" id="docExp"   placeholder="Experience (years)">
+          <button onclick="addDoctor()">💾 Save Doctor</button>
+        </div>
+
+        <!-- Add Patient -->
+        <div class="section" id="addPatient" style="display:none;">
+          <h3>🧑‍🤝‍🧑 Add Patient</h3>
+          <input type="text"   id="patName"    placeholder="Patient Name">
+          <input type="number" id="patAge"     placeholder="Age (optional)">
+          <input type="text"   id="patDisease" placeholder="Disease (optional)">
+          <button onclick="addPatient()">💾 Save Patient</button>
+        </div>
+
+        <!-- Add Medicine -->
+        <div class="section" id="addMedicine" style="display:none;">
+          <h3>💊 Add Medicine / Equipment</h3>
+          <input type="text" id="medName" placeholder="Medicine / Equipment Name">
+          <select id="medStatus">
+            <option value="Available">✅ Available</option>
+            <option value="Defective">❌ Defective</option>
+          </select>
+          <button onclick="addMedicine()">💾 Save</button>
+        </div>
+
+        <!-- View All Records with SLIDER -->
+        <div class="section" id="viewDetails" style="display:none;">
+          <h3>📋 All Records</h3>
+
+          <!-- Slide tab indicators -->
+          <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;" id="tabBar">
+            <span class="slide-tab active" onclick="goSlide(0)">👨‍⚕️ Doctors</span>
+            <span class="slide-tab" onclick="goSlide(1)">🧑‍🤝‍🧑 Patients</span>
+            <span class="slide-tab" onclick="goSlide(2)">💊 Medicines</span>
+            <span class="slide-tab" onclick="goSlide(3)">📅 Appointments</span>
+            <span class="slide-tab" onclick="goSlide(4)">🚫 Absent</span>
+          </div>
+
+          <style>
+            .slide-tab {
+              padding: 6px 14px;
+              border-radius: 99px;
+              font-size: 0.75rem;
+              font-family: 'Rajdhani', sans-serif;
+              font-weight: 700;
+              letter-spacing: 0.06em;
+              cursor: pointer;
+              background: rgba(255,255,255,0.07);
+              border: 1px solid rgba(255,255,255,0.1);
+              color: rgba(255,255,255,0.6);
+              transition: all 0.25s;
+            }
+            .slide-tab.active, .slide-tab:hover {
+              background: linear-gradient(135deg, rgba(0,245,255,0.25), rgba(139,92,246,0.25));
+              border-color: rgba(0,245,255,0.4);
+              color: #fff;
+            }
+          </style>
+
+          <div class="slider-container">
+            <div class="slider" id="recordsSlider">
+              <div class="slide"><h4>👨‍⚕️ Doctors</h4><pre id="doctorRecords">Loading...</pre></div>
+              <div class="slide"><h4>🧑‍🤝‍🧑 Patients</h4><pre id="patientRecords">Loading...</pre></div>
+              <div class="slide"><h4>💊 Medicines / Equipment</h4><pre id="medicineRecords">Loading...</pre></div>
+              <div class="slide"><h4>📅 Appointments</h4><pre id="appointmentRecords">Loading...</pre></div>
+              <div class="slide"><h4>🚫 Absent Patients</h4><pre id="absentRecords">Loading...</pre></div>
+            </div>
+          </div>
+
+          <div class="slider-controls">
+            <button id="prevBtn" onclick="prevSlide()">⬅ Prev</button>
+            <span id="slideCounter" style="color:rgba(255,255,255,0.5);font-size:0.82rem;align-self:center;font-family:'Rajdhani',sans-serif;">1 / 5</span>
+            <button id="nextBtn" onclick="nextSlide()">Next ➡</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    window.addEventListener('load', () => {
+      document.getElementById('pt').classList.add('enter');
+    });
+
+    function navTo(e, url) {
+      e.preventDefault();
+      const pt = document.getElementById('pt');
+      pt.classList.remove('enter');
+      pt.classList.add('leave');
+      setTimeout(() => location.href = url, 450);
+    }
+
+    function goSlide(n) {
+      currentSlide = n;
+      updateSlider();
+    }
+  </script>
+</body>
+</html>

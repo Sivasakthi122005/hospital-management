@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Patient Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="patient-page">
+
+  <div class="page-transition" id="pt"></div>
+
+  <div class="page-wrapper">
+    <div class="container">
+      <h2>🩺 Patient Dashboard</h2>
+
+      <h3>📅 Book Appointment</h3>
+      <input type="text" id="patientNameApp" placeholder="Enter Patient Name">
+      <input type="date" id="appointmentDate">
+      <input type="time" id="appointmentTime">
+      <select id="doctorSelect"><option>Loading doctors...</option></select>
+      <button onclick="bookAppointment()" style="background:linear-gradient(135deg,#ff2d9b,#8b5cf6);box-shadow:0 4px 22px rgba(255,45,155,0.4);">
+        📋 Book Appointment
+      </button>
+
+      <h3>📄 My Appointments</h3>
+      <pre id="appointments">Loading...</pre>
+
+      <a href="login.html" onclick="navTo(event,'login.html')">
+        <button style="margin-top:10px;">🚪 Logout</button>
+      </a>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    window.addEventListener('load', () => {
+      document.getElementById('pt').classList.add('enter');
+    });
+    function navTo(e, url) {
+      e.preventDefault();
+      const pt = document.getElementById('pt');
+      pt.classList.remove('enter');
+      pt.classList.add('leave');
+      setTimeout(() => location.href = url, 450);
+    }
+  </script>
+</body>
+</html>

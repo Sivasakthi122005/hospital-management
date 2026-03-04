@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hospital Login</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="login-page">
+
+  <!-- Page transition overlay -->
+  <div class="page-transition" id="pt"></div>
+
+  <div class="page-wrapper">
+    <div class="container">
+      <span class="login-icon">🏥</span>
+      <h2>Hospital Login</h2>
+
+      <h3>Username</h3>
+      <input type="text" id="username" placeholder="Enter username">
+
+      <h3>Password</h3>
+      <input type="password" id="password" placeholder="Enter password">
+
+      <button onclick="login()" style="margin-top:14px;">Login →</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    // Page enter animation
+    window.addEventListener('load', () => {
+      const pt = document.getElementById('pt');
+      pt.classList.add('enter');
+    });
+
+    // Override login to add transition
+    const _origLogin = window.login;
+    window.login = function() {
+      const user = document.getElementById('username').value;
+      const pass = document.getElementById('password').value;
+      let dest = null;
+
+      if (user === "admin" && pass === "admin123") dest = "admin.html";
+      else if (user === "patient" && pass === "patient123") dest = "patient.html";
+      else { alert("Invalid login"); return; }
+
+      navigateTo(dest);
+    };
+
+    function navigateTo(url) {
+      const pt = document.getElementById('pt');
+      pt.classList.remove('enter');
+      pt.classList.add('leave');
+      setTimeout(() => { location.href = url; }, 450);
+    }
+  </script>
+</body>
+</html>

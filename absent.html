@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Absent Patients</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="absent-page">
+
+  <div class="page-transition" id="pt"></div>
+
+  <div class="page-wrapper">
+    <div class="container">
+      <h2>🚫 Mark Absent</h2>
+      <h3>📋 Today's Appointments</h3>
+      <div id="appointmentList"></div>
+
+      <button onclick="saveAbsent()" style="background:linear-gradient(135deg,#ff2d9b,#ff6b35);box-shadow:0 4px 22px rgba(255,45,155,0.4);margin-top:14px;">
+        💾 Save Absent List
+      </button>
+
+      <h3>🚫 Absent Patients</h3>
+      <pre id="absentList">Loading...</pre>
+
+      <a href="admin.html" onclick="navTo(event,'admin.html')">
+        <button style="background:linear-gradient(135deg,#3b82f6,#8b5cf6);">⬅ Back to Admin</button>
+      </a>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    window.addEventListener('load', () => {
+      document.getElementById('pt').classList.add('enter');
+    });
+    function navTo(e, url) {
+      e.preventDefault();
+      const pt = document.getElementById('pt');
+      pt.classList.remove('enter');
+      pt.classList.add('leave');
+      setTimeout(() => location.href = url, 450);
+    }
+  </script>
+</body>
+</html>
