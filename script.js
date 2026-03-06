@@ -1,4 +1,4 @@
-const API = "http://localhost:5000/api";
+const API = "/api";
 
 // ---------------- LOGIN ----------------
 function login() {
@@ -238,21 +238,4 @@ window.onload = () => {
   populateDoctors();
   showAppointments();
   loadAppointmentsForAbsent();
-};
-
-// ── PATCHED updateSlider (tab bar + counter support) ──
-const _origUpdate = updateSlider;
-updateSlider = function() {
-  const slider = document.getElementById('recordsSlider');
-  const slides = document.querySelectorAll('.slide');
-  const prev   = document.getElementById('prevBtn');
-  const next   = document.getElementById('nextBtn');
-  const counter= document.getElementById('slideCounter');
-  const tabs   = document.querySelectorAll('.slide-tab');
-
-  if (slider)  slider.style.transform = `translateX(-${currentSlide * 100}%)`;
-  if (prev)    prev.disabled  = currentSlide === 0;
-  if (next)    next.disabled  = currentSlide === slides.length - 1;
-  if (counter) counter.textContent = `${currentSlide + 1} / ${slides.length}`;
-  tabs.forEach((t,i) => t.classList.toggle('active', i === currentSlide));
 };
